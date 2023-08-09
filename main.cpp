@@ -1,7 +1,7 @@
 /* @Author
-Student Name: Umut TÖLEK
-Student ID : 150190724
-Date: 08.11.2021 */
+Student Name: Ahmet Selim Gözükara
+Student ID : 060190228
+*/
 
 
 #include <iostream>
@@ -31,7 +31,9 @@ int main(){
     while(!is_exit)
     {
         cout<<"Input the expression in infix: ";
-        cin>>infix;
+        // cin>>infix;
+
+        infix = "1+2+3+4";
 
         if (infix == "E" || infix == "e") 
             is_exit = true;
@@ -43,8 +45,8 @@ int main(){
             cout<<setprecision(2)<<fixed<<eval_postfix(postfix)<<endl;
         }
         
-        cin.clear();
-        cin.ignore();
+        //cin.clear();
+        //cin.ignore();
         infix.clear();
         postfix.clear();
 
@@ -85,6 +87,7 @@ void infix_to_postfix(string infix,string& postfix)
             myStack.push(infix[i]);
         }
     }
+
     while(!myStack.empty())
     {
         postfix = postfix + myStack.top();
@@ -93,7 +96,8 @@ void infix_to_postfix(string infix,string& postfix)
     
 }
 
-bool higher_priority(char first,char second){
+bool higher_priority(char first,char second)
+{
     if(first=='*' || first=='/')
         return true;
     else if(second=='+' || second=='-')
@@ -103,13 +107,40 @@ bool higher_priority(char first,char second){
 
 
 
-
-double eval_postfix(string expr){
+double eval_postfix(string expr)
+{
     
+    stack<double> myStack;
+
+    for(int i = 0; i<expr.length(); i++)
+    {
+        if (isdigit(expr[i]) == true)
+        {
+            double number = static_cast<double>(expr[i] - '0');
+            myStack.push(number);
+        }
+        else
+        {
+            double first = myStack.top() ; myStack.pop();
+            double second = myStack.top(); myStack.pop();
+
+            double result  = evaluate(first,second,expr[i]);
+
+            myStack.push(result);
+        }
+        
+    }
+    double final_result = myStack.top(); 
+    
+    return final_result;
 }
 
-double evaluate(double first,double second,char c){
-    switch(c){
+
+
+double evaluate(double first,double second,char c)
+{
+    switch(c)
+    {
         case '*':
             return first*second;
         case '+':
